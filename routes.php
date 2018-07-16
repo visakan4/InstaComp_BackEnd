@@ -184,6 +184,40 @@ $app->post(
 
 
 $app->post(
+    "/checkLogin",
+    function () use ($app){
+        $user = $app -> request -> getJsonRawBody();
+
+        $phql = 'SELECT password FROM UserData\USER where email = :emailid:';
+
+        $user_password = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "emailid" => $user->user_id,
+            ]
+        );
+
+        $loginStatus = "LOGIN_FAILURE";
+
+        if ($user_password[0] -> password === $user -> password){
+            $loginStatus = "LOGIN_SUCCESS";
+        }
+
+        $response = new Response();
+        $response->setStatusCode(201,"RETRIEVED");
+        $response->setJsonContent(
+            [
+                "status" => "SUCCESS",
+                "data" => $loginStatus,
+            ]
+        );
+
+        return $response;
+    }
+);
+
+
+$app->post(
     "/getAddress",
     function () use ($app){
         $user = $app -> request -> getJsonRawBody();
@@ -320,6 +354,45 @@ $app->post(
                 ]
             );
         }
+        return $response;
+    }
+);
+
+$app->post(
+    "/getCardDetails",
+    function () use ($app){
+        $user = $app -> request -> getJsonRawBody();
+
+        $phql = 'SELECT * FROM UserData\USERCARD where userid = :id:';
+
+        $cards = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "id" => $user->user_id,
+            ]
+        );
+
+        $cardsData = [];
+
+        foreach ($cards as $card){
+            $cardsData[] = [
+                "card_id" => $card -> card_id,
+                "card_number" => $card -> cardno,
+                "expiry_date" => $card -> expiry_dt,
+                "cvv" => $card -> cvv,
+                "card_type" => $card -> cardtype,
+            ];
+        }
+
+        $response = new Response();
+        $response->setStatusCode(201,"RETRIEVED");
+        $response->setJsonContent(
+            [
+                "status" => "SUCCESS",
+                "data" => json_encode($cardsData),
+            ]
+        );
+
         return $response;
     }
 );
