@@ -12,7 +12,7 @@ use Phalcon\Mvc\Model;
 
 class USERCARD extends Model{
 
-    public $card_id;
+    public $cardid;
 
     public $cardno;
 

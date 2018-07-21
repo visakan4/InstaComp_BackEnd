@@ -182,6 +182,112 @@ $app->post(
   }
 );
 
+$app->post(
+    "/updateAddress",
+    function () use ($app){
+        $address = null;
+        $address = $app -> request -> getJsonRawBody();
+
+        $phql = 'UPDATE UserData\USERADDR 
+                 set addr_line1 = :addr_line1:,
+                     addr_line2 = :addr_line2:,
+                     city = :city:,
+                     province = :province:, 
+                     postal_code = :postal_code:
+                 where addressid = :addressid:';
+
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "addr_line1" => $address -> address_line_1,
+                "addr_line2" => $address -> address_line_2,
+                "city" => $address -> city,
+                "province" => $address -> province,
+                "postal_code" => $address -> postal_code,
+                "addressid" => $address -> address_id
+            ]
+        );
+
+        $response = new Response();
+
+        if ($status->success() === True){
+            $response->setStatusCode(201,"UPDATED");
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "addressStatus" => "ADDRESS_UPDATED"
+                ]
+            );
+        }
+        else{
+            $response->setStatusCode(409,"FAILURE");
+
+            $errors = [];
+
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "addressStatus" => "ADDRESS_NOT_UPDATED",
+                    "errors" => $errors
+                ]
+            );
+        }
+        return $response;
+    }
+);
+
+
+$app->post(
+    "/deleteAddress",
+    function () use ($app){
+        $address = $app -> request -> getJsonRawBody();
+
+        $phql = 'DELETE from UserData\USERADDR 
+                 where addressid = :addressid:';
+
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "addressid" => $address -> address_id,
+            ]
+        );
+
+        $response = new Response();
+
+        if ($status->success() === True){
+            $response->setStatusCode(201,"DELETED");
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "addressStatus" => "ADDRESS_DELETED"
+                ]
+            );
+        }
+        else{
+            $response->setStatusCode(409,"FAILURE");
+
+            $errors = [];
+
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "addressStatus" => "ADDRESS_NOT_DELETED",
+                    "errors" => $errors
+                ]
+            );
+        }
+        return $response;
+    }
+);
+
 
 $app->post(
     "/checkLogin",
@@ -359,6 +465,62 @@ $app->post(
 );
 
 $app->post(
+    "/updateCardDetails",
+    function () use ($app){
+        $user = $app -> request -> getJsonRawBody();
+
+        $phql = 'UPDATE UserData\USERCARD
+                 SET cardno = :cardno:,
+                     expiry_dt = :expiry_dt:,
+                     cvv = :cvv:,
+                     cardtype = :cardtype:
+                 where cardid = :cardid:';
+
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "cardno" => $user -> card_number,
+                "expiry_dt" => $user -> expiry_date,
+                "cvv" => $user -> cvv,
+                "cardtype" => $user -> card_type,
+                "cardid" => $user -> cardid,
+            ]
+        );
+
+        $response = new Response();
+
+        if ($status->success() === True){
+            $response->setStatusCode(201,"UPDATED");
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "addressStatus" => "CARD_DETAILS_UPDATED"
+                ]
+            );
+        }
+        else{
+            $response->setStatusCode(409,"FAILURE");
+
+            $errors = [];
+
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "addressStatus" => "CARD_NOT_UPDATED",
+                    "errors" => $errors
+                ]
+            );
+        }
+        return $response;
+    }
+);
+
+
+$app->post(
     "/getCardDetails",
     function () use ($app){
         $user = $app -> request -> getJsonRawBody();
@@ -396,6 +558,54 @@ $app->post(
         return $response;
     }
 );
+
+$app->post(
+    "/deleteCardDetails",
+    function () use ($app){
+        $user = $app -> request -> getJsonRawBody();
+
+        $phql = 'DELETE FROM UserData\USERCARD where cardid = :cardid:';
+
+        $cards = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "cardid" => $user->cardid,
+            ]
+        );
+
+        $response = new Response();
+
+        if ($cards->success() === True){
+            $response->setStatusCode(201,"DELETED");
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "addressStatus" => "CARD_DETAILS_DELETED"
+                ]
+            );
+        }
+        else{
+            $response->setStatusCode(409,"FAILURE");
+
+            $errors = [];
+
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "addressStatus" => "CARD_NOT_DELETED",
+                    "errors" => $errors
+                ]
+            );
+        }
+        return $response;
+    }
+);
+
+
 
 $app->handle();
 

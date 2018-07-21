@@ -7,7 +7,7 @@ use Phalcon\Mvc\Model;
 
 Class USERADDR extends Model{
 
-    public $address_id;
+    public $addressid;
 
     public $addr_line1;
 
@@ -36,15 +36,15 @@ Class USERADDR extends Model{
      */
     public function getAddressId()
     {
-        return $this->address_id;
+        return $this->addressid;
     }
 
     /**
-     * @param mixed $address_id
+     * @param mixed $addressid
      */
-    public function setAddressId($address_id): void
+    public function setAddressId($addressid): void
     {
-        $this->address_id = $address_id;
+        $this->addressid = $addressid;
     }
 
     /**
