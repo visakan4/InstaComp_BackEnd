@@ -494,7 +494,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "CARD_DETAILS_UPDATED"
+                    "cardStatus" => "CARD_DETAILS_UPDATED"
                 ]
             );
         }
@@ -510,7 +510,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "CARD_NOT_UPDATED",
+                    "cardStatus" => "CARD_NOT_UPDATED",
                     "errors" => $errors
                 ]
             );
@@ -580,7 +580,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "CARD_DETAILS_DELETED"
+                    "cardStatus" => "CARD_DETAILS_DELETED"
                 ]
             );
         }
@@ -596,7 +596,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "CARD_NOT_DELETED",
+                    "cardStatus" => "CARD_NOT_DELETED",
                     "errors" => $errors
                 ]
             );
