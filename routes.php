@@ -16,7 +16,7 @@ $loader->registerNamespaces(
 $loader->register();
 
 $di = new FactoryDefault();
-
+/*
 $di->set(
     'db',
     function () {
@@ -30,6 +30,23 @@ $di->set(
         );
     }
 );
+*/
+
+//Personal DB
+$di->set(
+    'db',
+    function () {
+        return new PdoMysql(
+            [
+                'host'     => 'localhost:3308',
+                'username' => 'root',
+                'password' => 'root',
+                'dbname'   => 'gayathrib',
+            ]
+        );
+    }
+);
+
 
 
 $app = new Micro($di);
@@ -294,19 +311,32 @@ $app->post(
     function () use ($app){
         $user = $app -> request -> getJsonRawBody();
 
-        $phql = 'SELECT password FROM UserData\USER where email = :emailid:';
+        $phql = 'SELECT userid,firstname,lastname FROM UserData\USER where email = :emailid: 
+                 and password = :password:';
 
         $user_password = $app->modelsManager->executeQuery(
             $phql,
             [
                 "emailid" => $user->user_id,
+                "password" => $user->password,
             ]
         );
 
-        $loginStatus = "LOGIN_FAILURE";
+        $login = [];
 
-        if ($user_password[0] -> password === $user -> password){
-            $loginStatus = "LOGIN_SUCCESS";
+        if (count($user_password) != 0)
+        {
+            $login[] = [
+                "userid" => $user_password[0] -> userid,
+                "firstname" => $user_password[0] -> firstname,
+                "lastname" => $user_password[0] -> lastname,
+                "loginStatus" => "LOGIN_SUCCESS",
+            ];
+
+        }
+        else
+        {
+            $login["loginStatus"] = "LOGIN_FAILURE";
         }
 
         $response = new Response();
@@ -314,7 +344,7 @@ $app->post(
         $response->setJsonContent(
             [
                 "status" => "SUCCESS",
-                "data" => $loginStatus,
+                "data" => json_encode($login),
             ]
         );
 
