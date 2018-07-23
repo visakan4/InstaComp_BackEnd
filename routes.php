@@ -16,7 +16,7 @@ $loader->registerNamespaces(
 $loader->register();
 
 $di = new FactoryDefault();
-/*
+
 $di->set(
     'db',
     function () {
@@ -30,8 +30,8 @@ $di->set(
         );
     }
 );
-*/
 
+/*
 //Personal DB
 $di->set(
     'db',
@@ -46,7 +46,7 @@ $di->set(
         );
     }
 );
-
+*/
 
 
 $app = new Micro($di);
