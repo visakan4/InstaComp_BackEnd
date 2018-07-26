@@ -31,23 +31,6 @@ $di->set(
     }
 );
 
-/*
-//Personal DB
-$di->set(
-    'db',
-    function () {
-        return new PdoMysql(
-            [
-                'host'     => 'localhost:3308',
-                'username' => 'root',
-                'password' => 'root',
-                'dbname'   => 'gayathrib',
-            ]
-        );
-    }
-);
-*/
-
 
 $app = new Micro($di);
 
@@ -371,6 +354,7 @@ $app->post(
 
         foreach ($addresses as $address){
             $addressData[] = [
+                "address_id" => $address -> addressid,
                 "addr_line1" => $address -> addr_line1,
                 "addr_line2" => $address -> addr_line2,
                 "city" => $address -> city,
@@ -568,7 +552,7 @@ $app->post(
 
         foreach ($cards as $card){
             $cardsData[] = [
-                "card_id" => $card -> card_id,
+                "card_id" => $card -> cardid,
                 "card_number" => $card -> cardno,
                 "expiry_date" => $card -> expiry_dt,
                 "cvv" => $card -> cvv,
@@ -588,6 +572,7 @@ $app->post(
         return $response;
     }
 );
+
 
 $app->post(
     "/deleteCardDetails",
@@ -619,7 +604,7 @@ $app->post(
 
             $errors = [];
 
-            foreach ($status->getMessages() as $message) {
+            foreach ($cards->getMessages() as $message) {
                 $errors[] = $message->getMessage();
             }
 
@@ -634,7 +619,6 @@ $app->post(
         return $response;
     }
 );
-
 
 
 $app->handle();
