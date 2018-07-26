@@ -153,11 +153,13 @@ $app->post(
       $response = new Response();
 
       if ($status->success() === True){
+          $model = $status ->getModel();
           $response->setStatusCode(201,"CREATED");
           $response->setJsonContent(
               [
                   "status" => "SUCCESS",
-                  "addressStatus" => "ADDRESS_ADDED"
+                  "addressStatus" => "ADDRESS_ADDED",
+                  "addressID" => $model ->addressid
               ]
           );
       }
@@ -428,6 +430,7 @@ $app->post(
     }
 );
 
+
 $app->post(
     "/setCardDetails",
     function () use ($app){
@@ -449,11 +452,13 @@ $app->post(
         $response = new Response();
 
         if ($status->success() === True){
+            $model = $status->getModel();
             $response->setStatusCode(201,"CREATED");
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "CARD_ADDED"
+                    "cardStatus" => "CARD_ADDED",
+                    "cardID" => $model ->cardid
                 ]
             );
         }
@@ -467,9 +472,9 @@ $app->post(
             }
 
             $response->setJsonContent(
-                [
+                    [
                     "status" => "SUCCESS",
-                    "addressStatus" => "CARD_NOT_ADDED",
+                    "cardStatus" => "CARD_NOT_ADDED",
                     "errors" => $errors
                 ]
             );
@@ -477,6 +482,7 @@ $app->post(
         return $response;
     }
 );
+
 
 $app->post(
     "/updateCardDetails",
