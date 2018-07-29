@@ -101,11 +101,12 @@ $app->post(
         $response = new Response();
 
         if ($status->success() === True){
+			$data[] = ["cartStatus" => "PRODUCT_ADDED"];
             $response->setStatusCode(201,"CREATED");
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "PRODUCT_ADDED"
+					"data" => array(["cartStatus" => "PRODUCT_ADDED"])
                 ]
             );
         }
@@ -117,11 +118,10 @@ $app->post(
             foreach ($status->getMessages() as $message) {
                 $errors[] = $message->getMessage();
             }
-
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "UNABLE_TO_ADD_TO_CART",
+					"data" => array(["cartStatus" => "UNABLE_TO_ADD_TO_CART"]),
                     "errors" => $errors
                 ]
             );
@@ -158,8 +158,8 @@ $app->post(
           $response->setJsonContent(
               [
                   "status" => "SUCCESS",
-                  "addressStatus" => "ADDRESS_ADDED",
-                  "addressID" => $model ->addressid
+                  "data" => array(["addressStatus" => "ADDRESS_ADDED",
+								   "addressID" => $model ->addressid]),
               ]
           );
       }
@@ -175,7 +175,7 @@ $app->post(
           $response->setJsonContent(
               [
                   "status" => "SUCCESS",
-                  "addressStatus" => "ADDRESS_NOT_ADDED",
+                  "data" => array(["addressStatus" => "ADDRESS_NOT_ADDED"]),
                   "errors" => $errors
               ]
           );
@@ -217,7 +217,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "ADDRESS_UPDATED"
+                    "data" => array(["addressStatus" => "ADDRESS_UPDATED"])
                 ]
             );
         }
@@ -233,7 +233,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "ADDRESS_NOT_UPDATED",
+                    "data" => array(["addressStatus" => "ADDRESS_NOT_UPDATED"]),
                     "errors" => $errors
                 ]
             );
@@ -265,7 +265,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "ADDRESS_DELETED"
+                    "data" => array(["addressStatus" => "ADDRESS_DELETED"])
                 ]
             );
         }
@@ -281,7 +281,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "ADDRESS_NOT_DELETED",
+                    "data" => array(["addressStatus" => "ADDRESS_NOT_DELETED"]),
                     "errors" => $errors
                 ]
             );
@@ -303,7 +303,7 @@ $app->post(
             $phql,
             [
                 "emailid" => $user->user_id,
-                "password" => $user->password,
+                "password" => (hash('sha512',"jkaasdxxczsdk9076vtiuy".$user -> password."fdghytbnmbaphutdrchnv"))
             ]
         );
 
@@ -321,7 +321,7 @@ $app->post(
         }
         else
         {
-            $login["loginStatus"] = "LOGIN_FAILURE";
+            $login[] = ["loginStatus" => "LOGIN_FAILURE"];
         }
 
         $response = new Response();
@@ -329,7 +329,7 @@ $app->post(
         $response->setJsonContent(
             [
                 "status" => "SUCCESS",
-                "data" => json_encode($login),
+                "data" => $login,
             ]
         );
 
@@ -371,7 +371,7 @@ $app->post(
         $response->setJsonContent(
             [
                 "status" => "SUCCESS",
-                "data" => json_encode($addressData),
+                "data" => $addressData,
             ]
         );
 
@@ -385,27 +385,58 @@ $app->post(
     function () use ($app){
         $user = $app -> request -> getJsonRawBody();
 
+		$phql = 'SELECT userid FROM UserData\USER where email = :emailid:';
+
+        $found = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "emailid" => $user->email
+            ]
+        );
+
+        $response = new Response();
+
+        if (count($found) != 0)
+        {
+			$response->setStatusCode(409,"FAILURE");
+
+            $errors = [];
+
+            foreach ($found->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "data" => array(["userStatus" => "USER_NOT_ADDED"]),
+                    "errors" => array("email already registered"),
+                ]
+            );
+			return $response;
+		}
+
+
         $phql = 'INSERT INTO UserData\USER(firstname,lastname,email,contact,password) values(:firstname:,:lastname:,:email:,:contact:,:password:)';
 
         $status = $app->modelsManager->executeQuery(
             $phql,
             [
-                "firstname" => $user -> firstName,
-                "lastname" => $user -> lastName,
+                "firstname" => $user -> firstname,
+                "lastname" => $user -> lastname,
                 "email" => $user -> email,
                 "contact" => $user -> contact,
-                "password" => $user -> password,
+                "password" => (hash('sha512',"jkaasdxxczsdk9076vtiuy".$user -> password."fdghytbnmbaphutdrchnv"))
+			
             ]
         );
-
-        $response = new Response();
 
         if ($status->success() === True){
             $response->setStatusCode(201,"CREATED");
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "USER_ADDED"
+                    "data" => array(["userStatus" => "USER_ADDED"])
                 ]
             );
         }
@@ -421,7 +452,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "addressStatus" => "USER_NOT_ADDED",
+                    "data" => array(["userStatus" => "USER_NOT_ADDED"]),
                     "errors" => $errors
                 ]
             );
@@ -457,8 +488,8 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "cardStatus" => "CARD_ADDED",
-                    "cardID" => $model ->cardid
+                    "data" => array(["cardStatus" => "CARD_ADDED",
+					   				 "cardID" => $model ->cardid])
                 ]
             );
         }
@@ -474,7 +505,7 @@ $app->post(
             $response->setJsonContent(
                     [
                     "status" => "SUCCESS",
-                    "cardStatus" => "CARD_NOT_ADDED",
+                    "data" => array(["cardStatus" => "CARD_NOT_ADDED"]),
                     "errors" => $errors
                 ]
             );
@@ -514,7 +545,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "cardStatus" => "CARD_DETAILS_UPDATED"
+                    "data" => array(["cardStatus" => "CARD_DETAILS_UPDATED"])
                 ]
             );
         }
@@ -530,7 +561,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "cardStatus" => "CARD_NOT_UPDATED",
+                    "data" => array(["cardStatus" => "CARD_NOT_UPDATED"]),
                     "errors" => $errors
                 ]
             );
@@ -571,7 +602,7 @@ $app->post(
         $response->setJsonContent(
             [
                 "status" => "SUCCESS",
-                "data" => json_encode($cardsData),
+                "data" => $cardsData,
             ]
         );
 
@@ -601,7 +632,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "cardStatus" => "CARD_DETAILS_DELETED"
+                    "data" => array(["cardStatus" => "CARD_DETAILS_DELETED"])
                 ]
             );
         }
@@ -617,7 +648,7 @@ $app->post(
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",
-                    "cardStatus" => "CARD_NOT_DELETED",
+                    "data" => array(["cardStatus" => "CARD_NOT_DELETED"]),
                     "errors" => $errors
                 ]
             );
