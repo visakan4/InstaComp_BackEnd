@@ -94,7 +94,7 @@ $app->post(
                 "prodid" => $cart -> product_id,
                 "storeid" => $cart -> store_id,
                 "price" => $cart -> product_store_price,
-                "quantity" => $cart -> product_store_quantity,
+                "quantity" => $cart -> product_store_quantity
             ]
         );
 
@@ -130,7 +130,51 @@ $app->post(
     }
 );
 
+$app->post(
+    "/getCart",
 
+    function () use ($app){
+        $cart = $app -> request -> getJsonRawBody();
+
+        $phql = "SELECT prodid from UserData\CART where userid = :userid:";
+
+        $prodids = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "userid" => $cart -> user_id
+            ]
+        );
+
+        $ids = array();
+
+        foreach ($prodids as $prodid){
+            $phql = "SELECT UserData\PRODUCT.brandname,UserData\CART.quantity,UserData\CART.price,UserData\PRODUCT_BY_STORE.prodid,UserData\CATEGORY.category_name,UserData\CATEGORY.categoryid,UserData\PRODUCT_BY_STORE.storeid,UserData\PRODUCT.prod_name,UserData\PRODUCT.prodid,UserData\STORE.store_name FROM UserData\PRODUCT_BY_STORE 
+                         INNER JOIN UserData\PRODUCT ON UserData\PRODUCT_BY_STORE.prodid = UserData\PRODUCT.prodid
+                          INNER JOIN UserData\STORE ON UserData\PRODUCT_BY_STORE.storeid = UserData\STORE.storeid
+                          INNER JOIN UserData\CATEGORY ON UserData\PRODUCT.categoryid = UserData\CATEGORY.categoryid
+                          INNER JOIN UserData\CART ON UserData\CART.prodid = UserData\PRODUCT.prodid
+                          WHERE UserData\PRODUCT.prodid = :prodid:";
+
+            $products = $app->modelsManager->executeQuery(
+                $phql,
+                [
+                    "prodid" => $prodid -> prodid
+                ]
+            );
+
+            array_push($ids,$products);
+        }
+
+        $response = new Response();
+        $response->setJsonContent(
+            [
+                "status" => "SUCCESS",
+                "data" => $ids
+            ]
+        );
+        return $response;
+    }
+);
 $app->post(
   "/setAddress",
   function () use ($app){
@@ -656,6 +700,46 @@ $app->post(
         return $response;
     }
 );
+
+
+
+$app->post(
+    "/setOrder",
+    function () use ($app) {
+        $order = $app->request->getJsonRawBody();
+
+        $phql = 'INSERT INTO UserData\ORDERS(userid,addressid,orderprice,order_status,order_date,cardid) values(:userid,:addressid,:orderprice,:order_status,:order_date,:cardid)';
+
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "userid" => $order->user_id,
+                "addressid" => $order->address_id,
+                "orderprice" => $order->order_price,
+                "order_status" => "Processing",
+                "order_date" => getDate(),
+                "cardid" => getCardid()
+
+            ]
+        );
+        foreach ($order->product_details->product_id as $prodid) {
+            $phql = 'INSERT INTO  UserData\PRODUCT_BY_ORDER (prodid,storeid,price,quantity) values(:prodid,:storeid,:price,:quantity)';
+
+                $prodid = $app->modelsManager->executeQuery(
+                $phql,
+                [
+                    "prodid" => $order->product_details->product_id,
+                    "storeid" => $order->product_details->store_id,
+                    "price" => $order->product_details->product_order_quantity,
+                    "quantity" => $order->product_details->product_order_price
+
+                ]
+            );
+        }
+    }
+);
+
+
 
 
 $app->handle();
