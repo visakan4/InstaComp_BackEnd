@@ -27,6 +27,11 @@ class STORE extends Model{
             "UserData\CART",
             "storeid"
         );
+        $this->hasMany(
+            "storeid",
+            "UserData\PRODUCT_BY_ORDER",
+            "storeid"
+        );
     }
 
     /**

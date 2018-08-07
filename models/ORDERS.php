@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: SM
@@ -7,9 +8,10 @@
  */
 
 namespace UserData;
+
 use Phalcon\Mvc\Model;
 
-class ORDERS extends Models
+class ORDERS extends Model
 {
     public $orderid;
     public $userid;
@@ -36,12 +38,11 @@ class ORDERS extends Models
             "UserData\USERADDR",
             "addressid"
         );
-        $this->belongsTo(
+        $this->hasMany(
             "orderid",
-            "UserData\PRODUCT_BY_ORDER",
+            "UserData\PRODUCT_BY_STORE",
             "orderid"
         );
-
     }
 
     /**
@@ -155,7 +156,4 @@ class ORDERS extends Models
     {
         $this->cardid = $cardid;
     }
-
-
-
 }

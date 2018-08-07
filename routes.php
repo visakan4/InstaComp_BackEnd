@@ -740,6 +740,58 @@ $app->post(
 );
 
 
+$app->post(
+    "/getOrder",
+    function () use ($app)
+    {
+        $order = $app->request->getJsonRawBody();
+
+
+        $phql = "select UserData\ORDERS.orderid,UserData\ORDERS.userid, UserData\ORDERS.addressid, UserData\ORDERS.orderprice, UserData\ORDERS.order_status, UserData\ORDERS.order_date, UserData\ORDERS.cardid, UserData\USERADDR.addr_line1, UserData\USERADDR.addr_line2, UserData\USERADDR.city, UserData\USERADDR.postal_code, UserData\USERADDR.province, UserData\USERCARD.cardid, UserData\USERCARD.cardno, UserData\USERCARD.cardtype FROM UserData\ORDERS
+		            INNER JOIN UserData\USERADDR ON UserData\ORDERS.addressid = UserData\USERADDR.addressid
+                    INNER JOIN UserData\USERCARD ON UserData\ORDERS.cardid = UserData\USERCARD.cardid
+                    WHERE UserData\ORDERS.userid = :userid:";
+
+        $orderids = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "userid" => $order -> user_id
+            ]
+        );
+
+        $ids = array();
+
+        foreach ($orderids as $orderid){
+
+            $temp = $orderid;
+
+            $phql = "SELECT UserData\PRODUCT_BY_ORDER.orderid, UserData\PRODUCT_BY_ORDER.prodid, UserData\PRODUCT_BY_ORDER.storeid,UserData\PRODUCT_BY_ORDER.price,UserData\PRODUCT_BY_ORDER.quantity,UserData\PRODUCT.prod_name,UserData\STORE.storeid, UserData\STORE.store_name from UserData\PRODUCT_BY_ORDER
+	                  INNER JOIN UserData\PRODUCT ON UserData\PRODUCT_BY_ORDER.prodid = UserData\PRODUCT.prodid
+                      INNER JOIN UserData\STORE ON UserData\PRODUCT_BY_ORDER.storeid = UserData\STORE.storeid
+                      WHERE UserData\PRODUCT_BY_ORDER.orderid = :orderid:";
+
+            $orders = $app->modelsManager->executeQuery(
+                $phql,
+                [
+                    "orderid" => $orderid -> orderid
+                ]
+            );
+
+            $temp->product_details = $orders;
+
+            array_push($ids,$temp);
+        }
+
+        $response = new Response();
+        $response->setJsonContent(
+            [
+                "status" => "SUCCESS",
+                "data" => $ids
+            ]
+        );
+        return $response;
+    }
+);
 
 
 $app->handle();

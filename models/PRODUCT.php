@@ -32,6 +32,11 @@ class PRODUCT extends Model{
             "UserData\CART",
             "prodid"
         );
+        $this->hasMany(
+            "prodid",
+            "UserData\PRODUCT_BY_ORDER",
+            "prodid"
+        );
     }
 
     /**
