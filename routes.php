@@ -383,6 +383,59 @@ $app->post(
 
 
 $app->post(
+    "/getOrder",
+    function () use ($app) {
+
+        $orderInput = $app->request->getJsonRawBody();
+
+        $phql = 'SELECT UserData\ORDERS.orderid,UserData\ORDERS.userid, UserData\ORDERS.addressid, UserData\ORDERS.orderprice, UserData\ORDERS.order_status, UserData\ORDERS.order_date, UserData\ORDERS.cardid, UserData\USERADDR.addr_line1, UserData\USERADDR.addr_line2, UserData\USERADDR.city, UserData\USERADDR.postal_code, UserData\USERADDR.province, UserData\USERCARD.cardid, UserData\USERCARD.cardno, UserData\USERCARD.cardtype FROM UserData\ORDERS
+		            INNER JOIN UserData\USERADDR ON UserData\ORDERS.addressid = UserData\USERADDR.addressid
+                    INNER JOIN UserData\USERCARD ON UserData\ORDERS.cardid = UserData\USERCARD.cardid
+                    WHERE UserData\ORDERS.userid = :userid:';
+
+        $orderids = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "userid" => $orderInput -> user_id
+            ]
+        );
+
+        $ids = array();
+
+        foreach ($orderids as $orderid){
+
+            $temp = $orderid;
+
+            $phql = "SELECT UserData\PRODUCT_BY_ORDER.orderid, UserData\PRODUCT_BY_ORDER.prodid, UserData\PRODUCT_BY_ORDER.storeid,UserData\PRODUCT_BY_ORDER.price,UserData\PRODUCT_BY_ORDER.quantity,UserData\PRODUCT.prod_name,UserData\STORE.storeid, UserData\STORE.store_name from UserData\PRODUCT_BY_ORDER
+	                  INNER JOIN UserData\PRODUCT ON UserData\PRODUCT_BY_ORDER.prodid = UserData\PRODUCT.prodid
+                      INNER JOIN UserData\STORE ON UserData\PRODUCT_BY_ORDER.storeid = UserData\STORE.storeid
+                      WHERE UserData\PRODUCT_BY_ORDER.orderid = :orderid:";
+
+            $orders = $app->modelsManager->executeQuery(
+                $phql,
+                [
+                    "orderid" => $orderid -> orderid
+                ]
+            );
+
+            $temp->product_details = $orders;
+
+            array_push($ids,$temp);
+        }
+
+        $response = new Response();
+        $response->setJsonContent(
+            [
+                "status" => "SUCCESS",
+                "data" => $ids
+            ]
+        );
+        return $response;
+    }
+);
+
+
+$app->post(
     "/getAddress",
     function () use ($app){
         $user = $app -> request -> getJsonRawBody();
@@ -702,13 +755,12 @@ $app->post(
 );
 
 
-
 $app->post(
     "/setOrder",
     function () use ($app) {
         $order = $app->request->getJsonRawBody();
 
-        $phql = 'INSERT INTO UserData\ORDERS(userid,addressid,orderprice,order_status,order_date,cardid) values(:userid,:addressid,:orderprice,:order_status,:order_date,:cardid)';
+        $phql = 'INSERT INTO UserData\ORDERS(userid,addressid,orderprice,order_status,order_date,cardid) values(:userid:,:addressid:,:orderprice:,:order_status:, CURRENT_TIMESTAMP(),:cardid:)';
 
         $status = $app->modelsManager->executeQuery(
             $phql,
@@ -716,82 +768,107 @@ $app->post(
                 "userid" => $order->user_id,
                 "addressid" => $order->address_id,
                 "orderprice" => $order->order_price,
-                "order_status" => "Processing",
-                "order_date" => getDate(),
-                "cardid" => getCardid()
+                "order_status" => $order->order_status,
+                "cardid" => $order->card_id
 
             ]
         );
-        foreach ($order->product_details->product_id as $prodid) {
-            $phql = 'INSERT INTO  UserData\PRODUCT_BY_ORDER (prodid,storeid,price,quantity) values(:prodid,:storeid,:price,:quantity)';
-
-                $prodid = $app->modelsManager->executeQuery(
-                $phql,
-                [
-                    "prodid" => $order->product_details->product_id,
-                    "storeid" => $order->product_details->store_id,
-                    "price" => $order->product_details->product_order_quantity,
-                    "quantity" => $order->product_details->product_order_price
-
-                ]
-            );
-        }
-    }
-);
-
-
-$app->post(
-    "/getOrder",
-    function () use ($app)
-    {
-        $order = $app->request->getJsonRawBody();
-
-
-        $phql = "select UserData\ORDERS.orderid,UserData\ORDERS.userid, UserData\ORDERS.addressid, UserData\ORDERS.orderprice, UserData\ORDERS.order_status, UserData\ORDERS.order_date, UserData\ORDERS.cardid, UserData\USERADDR.addr_line1, UserData\USERADDR.addr_line2, UserData\USERADDR.city, UserData\USERADDR.postal_code, UserData\USERADDR.province, UserData\USERCARD.cardid, UserData\USERCARD.cardno, UserData\USERCARD.cardtype FROM UserData\ORDERS
-		            INNER JOIN UserData\USERADDR ON UserData\ORDERS.addressid = UserData\USERADDR.addressid
-                    INNER JOIN UserData\USERCARD ON UserData\ORDERS.cardid = UserData\USERCARD.cardid
-                    WHERE UserData\ORDERS.userid = :userid:";
-
-        $orderids = $app->modelsManager->executeQuery(
-            $phql,
-            [
-                "userid" => $order -> user_id
-            ]
-        );
-
-        $ids = array();
-
-        foreach ($orderids as $orderid){
-
-            $temp = $orderid;
-
-            $phql = "SELECT UserData\PRODUCT_BY_ORDER.orderid, UserData\PRODUCT_BY_ORDER.prodid, UserData\PRODUCT_BY_ORDER.storeid,UserData\PRODUCT_BY_ORDER.price,UserData\PRODUCT_BY_ORDER.quantity,UserData\PRODUCT.prod_name,UserData\STORE.storeid, UserData\STORE.store_name from UserData\PRODUCT_BY_ORDER
-	                  INNER JOIN UserData\PRODUCT ON UserData\PRODUCT_BY_ORDER.prodid = UserData\PRODUCT.prodid
-                      INNER JOIN UserData\STORE ON UserData\PRODUCT_BY_ORDER.storeid = UserData\STORE.storeid
-                      WHERE UserData\PRODUCT_BY_ORDER.orderid = :orderid:";
-
-            $orders = $app->modelsManager->executeQuery(
-                $phql,
-                [
-                    "orderid" => $orderid -> orderid
-                ]
-            );
-
-            $temp->product_details = $orders;
-
-            array_push($ids,$temp);
-        }
 
         $response = new Response();
-        $response->setJsonContent(
-            [
-                "status" => "SUCCESS",
-                "data" => $ids
-            ]
-        );
+
+        if ($status->success() === True){
+
+            $model = $status->getModel();
+
+            foreach ($order->product_details as $product) {
+                $phql = 'INSERT INTO  UserData\PRODUCT_BY_ORDER (orderid,prodid,storeid,price,quantity) values(:orderid:,:prodid:,:storeid:,:price:,:quantity:)';
+
+                $order = $app->modelsManager->executeQuery(
+                    $phql,
+                    [
+                        "prodid" => $product->product_id,
+                        "storeid" => $product->store_id,
+                        "price" => $product->product_order_price,
+                        "quantity" => $product->product_order_quantity,
+                        "orderid" => $model->orderid
+                    ]
+                );
+
+
+                if ($order->success() === True){
+                    $phql = "UPDATE UserData\PRODUCT_BY_STORE 
+                                SET quantity = quantity - '$product->product_order_quantity'
+	                            WHERE UserData\PRODUCT_BY_STORE.prodid = :prodid: AND 
+                                UserData\PRODUCT_BY_STORE.storeid = :storeid: AND 
+                                UserData\PRODUCT_BY_STORE.quantity > 0";
+
+                    $reduce_order = $app->modelsManager->executeQuery(
+                        $phql,
+                        [
+                            "prodid" => $product->product_id,
+                            "storeid" => $product->store_id
+                        ]
+                    );
+
+                    if ($reduce_order->success() === False){
+                        break;
+                    }
+                }
+                else{
+                    break;
+                }
+            }
+
+            if ($order->success() === True){
+                $response->setStatusCode(201,"CREATED");
+                $response->setJsonContent(
+                    [
+                        "status" => "SUCCESS",
+                        "data" => array(["orderStatus" => "ORDER_PLACED",
+                            "orderID" => $model ->orderid])
+                    ]
+                );
+            }
+            else{
+                $response->setStatusCode(409,"FAILURE");
+
+                $errors = [];
+
+                foreach ($order->getMessages() as $message) {
+                    $errors[] = $message->getMessage();
+                }
+
+                $response->setJsonContent(
+                    [
+                        "status" => "SUCCESS",
+                        "data" => array(["orderStatus" => "ORDER_NOT_PLACED"]),
+                        "errors" => $errors
+                    ]
+                );
+            }
+        }
+        else{
+            $response->setStatusCode(409,"FAILURE");
+
+            $errors = [];
+
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "data" => array(["orderStatus" => "FAILED_PLACING_ORDER"]),
+                    "errors" => $errors
+                ]
+            );
+        }
+
         return $response;
     }
 );
+
 
 
 $app->handle();
