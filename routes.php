@@ -867,6 +867,53 @@ $app->post(
 
 
 $app->post(
+    "/deleteCardByUserId",
+    function () use ($app){
+        $user = $app -> request -> getJsonRawBody();
+
+        $phql = 'DELETE FROM UserData\CART WHERE userid = :userid:';
+
+        $delete_cart = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "userid" => $user->user_id,
+            ]
+        );
+
+        $response = new Response();
+
+        if ($delete_cart->success() === True){
+            $response->setStatusCode(201,"DELETED");
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "data" => array(["cartStatus" => "CART_DELETED"])
+                ]
+            );
+        }
+        else{
+            $response->setStatusCode(409,"FAILURE");
+
+            $errors = [];
+
+            foreach ($delete_cart->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "data" => array(["cartStatus" => "CART_NOT_DELETED"]),
+                    "errors" => $errors
+                ]
+            );
+        }
+        return $response;
+    }
+);
+
+
+$app->post(
     "/setOrder",
     function () use ($app) {
         $order = $app->request->getJsonRawBody();
@@ -894,7 +941,7 @@ $app->post(
             foreach ($order->product_details as $product) {
                 $phql = 'INSERT INTO  UserData\PRODUCT_BY_ORDER (orderid,prodid,storeid,price,quantity) values(:orderid:,:prodid:,:storeid:,:price:,:quantity:)';
 
-                $order = $app->modelsManager->executeQuery(
+                $order_details = $app->modelsManager->executeQuery(
                     $phql,
                     [
                         "prodid" => $product->product_id,
@@ -906,7 +953,7 @@ $app->post(
                 );
 
 
-                if ($order->success() === True){
+                if ($order_details->success() === True) {
                     $phql = "UPDATE UserData\PRODUCT_BY_STORE 
                                 SET quantity = quantity - '$product->product_order_quantity'
 	                            WHERE UserData\PRODUCT_BY_STORE.prodid = :prodid: AND 
@@ -921,11 +968,10 @@ $app->post(
                         ]
                     );
 
-                    if ($reduce_order->success() === False){
+                    if ($reduce_order->success() === False) {
                         break;
                     }
-                }
-                else{
+                } else {
                     break;
                 }
             }
@@ -942,13 +988,10 @@ $app->post(
             }
             else{
                 $response->setStatusCode(409,"FAILURE");
-
                 $errors = [];
-
                 foreach ($order->getMessages() as $message) {
                     $errors[] = $message->getMessage();
                 }
-
                 $response->setJsonContent(
                     [
                         "status" => "SUCCESS",
@@ -975,7 +1018,6 @@ $app->post(
                 ]
             );
         }
-
         return $response;
     }
 );
