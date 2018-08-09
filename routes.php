@@ -31,7 +31,6 @@ $di->set(
     }
 );
 
-
 $app = new Micro($di);
 
 $app->get(
@@ -343,6 +342,53 @@ $app->post(
                 [
                     "status" => "SUCCESS",
                     "data" => array(["addressStatus" => "ADDRESS_NOT_DELETED"]),
+                    "errors" => $errors
+                ]
+            );
+        }
+        return $response;
+    }
+);
+
+
+$app->post(
+    "/deleteCart",
+    function () use ($app){
+        $cart = $app -> request -> getJsonRawBody();
+
+        $phql = 'DELETE FROM UserData\CART WHERE cartid = :cartid:';
+
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "cartid" => $cart -> cartid,
+            ]
+        );
+
+        $response = new Response();
+
+        if ($status->success() === True){
+            $response->setStatusCode(201,"DELETED");
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "data" => array(["cartStatus" => "ITEM_DELETED_FROM_CART"])
+                ]
+            );
+        }
+        else{
+            $response->setStatusCode(409,"FAILURE");
+
+            $errors = [];
+
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "data" => array(["cartStatus" => "ITEM_NOT_DELETED_FROM_CART"]),
                     "errors" => $errors
                 ]
             );
