@@ -732,6 +732,54 @@ $app->post(
 
 
 $app->post(
+    "/updateCartDetails",
+    function () use ($app){
+        $cart = $app -> request -> getJsonRawBody();
+
+        $phql = 'UPDATE UserData\CART SET quantity = :quantity: where cartid = :cartid:';
+
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                "quantity" => $cart -> quantity,
+                "cartid" => $cart -> cartid
+            ]
+        );
+
+        $response = new Response();
+
+        if ($status->success() === True){
+            $response->setStatusCode(201,"UPDATED");
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "data" => array(["cardStatus" => "CART_DETAILS_UPDATED"])
+                ]
+            );
+        }
+        else{
+            $response->setStatusCode(409,"FAILURE");
+
+            $errors = [];
+
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    "status" => "SUCCESS",
+                    "data" => array(["cardStatus" => "CART_DETAILS_NOT_UPDATED"]),
+                    "errors" => $errors
+                ]
+            );
+        }
+        return $response;
+    }
+);
+
+
+$app->post(
     "/getCardDetails",
     function () use ($app){
         $user = $app -> request -> getJsonRawBody();

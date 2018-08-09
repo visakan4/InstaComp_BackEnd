@@ -16,8 +16,8 @@
       <file leaf-file-name="routes.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="370" column="37" lean-forward="true" selection-start-line="370" selection-start-column="37" selection-end-line="370" selection-end-column="37" />
+            <state relative-caret-position="246">
+              <caret line="732" lean-forward="true" selection-start-line="732" selection-end-line="732" />
             </state>
           </provider>
         </entry>
@@ -59,6 +59,9 @@
       <find>getOrder</find>
       <find>getCart</find>
       <find>delete</find>
+      <find>update</find>
+      <find>deleteCart</find>
+      <find>updateCart</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -184,12 +187,12 @@
       <workItem from="1531766909722" duration="3675000" />
       <workItem from="1532573286432" duration="4537000" />
       <workItem from="1533782698018" duration="28000" />
-      <workItem from="1533821337305" duration="4937000" />
+      <workItem from="1533821337305" duration="5522000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61895000" />
+    <option name="totallyTimeSpent" value="62480000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -594,8 +597,8 @@
     <entry file="file://$USER_HOME$/AppData/Local/Temp/fz3temp-2/routes.php" />
     <entry file="file://$PROJECT_DIR$/routes.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="370" column="37" lean-forward="true" selection-start-line="370" selection-start-column="37" selection-end-line="370" selection-end-column="37" />
+        <state relative-caret-position="246">
+          <caret line="732" lean-forward="true" selection-start-line="732" selection-end-line="732" />
         </state>
       </provider>
     </entry>
