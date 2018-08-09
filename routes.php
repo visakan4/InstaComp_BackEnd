@@ -867,7 +867,7 @@ $app->post(
 
 
 $app->post(
-    "/deleteCardByUserId",
+    "/deleteCartByUserId",
     function () use ($app){
         $user = $app -> request -> getJsonRawBody();
 

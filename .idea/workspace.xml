@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="352a99cc-eff7-4574-955e-7aca9570606b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,8 +16,8 @@
       <file leaf-file-name="routes.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="876" column="18" lean-forward="true" selection-start-line="876" selection-start-column="18" selection-end-line="876" selection-end-column="18" />
+            <state relative-caret-position="236">
+              <caret line="869" lean-forward="true" selection-start-line="869" selection-end-line="869" />
             </state>
           </provider>
         </entry>
@@ -70,9 +69,10 @@
       <find>getCart</find>
       <find>delete</find>
       <find>update</find>
-      <find>deleteCart</find>
       <find>updateCart</find>
       <find>setOrder</find>
+      <find>deleteCart</find>
+      <find>deleteCar</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -199,12 +199,12 @@
       <workItem from="1532573286432" duration="4537000" />
       <workItem from="1533782698018" duration="28000" />
       <workItem from="1533821337305" duration="6266000" />
-      <workItem from="1533855978691" duration="1840000" />
+      <workItem from="1533855978691" duration="2282000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="65064000" />
+    <option name="totallyTimeSpent" value="65506000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -609,8 +609,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="876" column="18" lean-forward="true" selection-start-line="876" selection-start-column="18" selection-end-line="876" selection-end-column="18" />
+        <state relative-caret-position="236">
+          <caret line="869" lean-forward="true" selection-start-line="869" selection-end-line="869" />
         </state>
       </provider>
     </entry>
