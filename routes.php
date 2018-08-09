@@ -130,13 +130,14 @@ $app->post(
     }
 );
 
+
 $app->post(
     "/getCart",
 
     function () use ($app){
         $cart = $app -> request -> getJsonRawBody();
 
-        $phql = "SELECT prodid from UserData\CART where userid = :userid:";
+        $phql = "SELECT UserData\CART.cartid,UserData\CART.prodid, UserData\CART.storeid,UserData\CART.price,UserData\CART.quantity from UserData\CART where userid = :userid:";
 
         $prodids = $app->modelsManager->executeQuery(
             $phql,
@@ -148,12 +149,12 @@ $app->post(
         $ids = array();
 
         foreach ($prodids as $prodid){
-            $phql = "SELECT UserData\PRODUCT.brandname,UserData\CART.quantity,UserData\CART.price,UserData\PRODUCT_BY_STORE.prodid,UserData\CATEGORY.category_name,UserData\CATEGORY.categoryid,UserData\PRODUCT_BY_STORE.storeid,UserData\PRODUCT.prod_name,UserData\PRODUCT.prodid,UserData\STORE.store_name FROM UserData\PRODUCT_BY_STORE 
-                         INNER JOIN UserData\PRODUCT ON UserData\PRODUCT_BY_STORE.prodid = UserData\PRODUCT.prodid
-                          INNER JOIN UserData\STORE ON UserData\PRODUCT_BY_STORE.storeid = UserData\STORE.storeid
-                          INNER JOIN UserData\CATEGORY ON UserData\PRODUCT.categoryid = UserData\CATEGORY.categoryid
-                          INNER JOIN UserData\CART ON UserData\CART.prodid = UserData\PRODUCT.prodid
-                          WHERE UserData\PRODUCT.prodid = :prodid:";
+
+            $temp = $prodid;
+
+            $phql = "SELECT UserData\PRODUCT.prod_name, UserData\PRODUCT.brandname, UserData\CATEGORY.categoryid FROM UserData\PRODUCT
+                        INNER JOIN UserData\CATEGORY ON UserData\CATEGORY.categoryid = UserData\PRODUCT.categoryid
+                        where prodid = :prodid:";
 
             $products = $app->modelsManager->executeQuery(
                 $phql,
@@ -162,7 +163,20 @@ $app->post(
                 ]
             );
 
-            array_push($ids,$products);
+            $temp->product_details = $products;
+
+            $phql = "SELECT UserData\STORE.store_name FROM UserData\STORE where UserData\STORE.storeid = :storeid:";
+
+            $store = $app->modelsManager->executeQuery(
+                $phql,
+                [
+                    "storeid" => $prodid -> storeid
+                ]
+            );
+
+            $temp->store_details = $store;
+
+            array_push($ids,$temp);
         }
 
         $response = new Response();
@@ -172,9 +186,12 @@ $app->post(
                 "data" => $ids
             ]
         );
+
         return $response;
     }
 );
+
+
 $app->post(
   "/setAddress",
   function () use ($app){
@@ -868,7 +885,6 @@ $app->post(
         return $response;
     }
 );
-
 
 
 $app->handle();
