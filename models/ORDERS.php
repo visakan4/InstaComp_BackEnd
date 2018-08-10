@@ -17,7 +17,7 @@ class ORDERS extends Model
     public $userid;
     public $addressid;
     public $rderprice;
-    public $orderstatus;
+    public $order_status;
     public $orderdate;
     public $cardid;
 
@@ -112,17 +112,18 @@ class ORDERS extends Model
     /**
      * @return mixed
      */
-    public function getOrderstatus()
+    public function getOrder_status()
     {
-        return $this->orderstatus;
+        return $this->order_status;
     }
 
     /**
-     * @param mixed $orderstatus
+     * @param mixed $order_status
      */
-    public function setOrderstatus($orderstatus): void
+
+    public function setOrder_status($order_status): void
     {
-        $this->orderstatus = $orderstatus;
+        $this->order_status = $order_status;
     }
 
     /**

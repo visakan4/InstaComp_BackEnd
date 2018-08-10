@@ -918,7 +918,7 @@ $app->post(
     function () use ($app) {
         $order = $app->request->getJsonRawBody();
 
-        $phql = 'INSERT INTO UserData\ORDERS(userid,addressid,orderprice,order_status,order_date,cardid) values(:userid:,:addressid:,:orderprice:,:order_status:, CURRENT_TIMESTAMP(),:cardid:)';
+        $phql = 'INSERT INTO UserData\ORDERS(userid,addressid,orderprice,order_status,order_date,cardid) values(:userid:,:addressid:,:orderprice:,:orderstatus:,CURRENT_TIMESTAMP(),:cardid:)';
 
         $status = $app->modelsManager->executeQuery(
             $phql,
@@ -926,22 +926,18 @@ $app->post(
                 "userid" => $order->user_id,
                 "addressid" => $order->address_id,
                 "orderprice" => $order->order_price,
-                "order_status" => $order->order_status,
+                "orderstatus" => $order->order_status,
                 "cardid" => $order->card_id
-
             ]
         );
 
         $response = new Response();
 
         if ($status->success() === True){
-
             $model = $status->getModel();
-
             foreach ($order->product_details as $product) {
                 $phql = 'INSERT INTO  UserData\PRODUCT_BY_ORDER (orderid,prodid,storeid,price,quantity) values(:orderid:,:prodid:,:storeid:,:price:,:quantity:)';
-
-                $order_details = $app->modelsManager->executeQuery(
+                $order = $app->modelsManager->executeQuery(
                     $phql,
                     [
                         "prodid" => $product->product_id,
@@ -952,8 +948,8 @@ $app->post(
                     ]
                 );
 
+                if ($order->success() === True){
 
-                if ($order_details->success() === True) {
                     $phql = "UPDATE UserData\PRODUCT_BY_STORE 
                                 SET quantity = quantity - '$product->product_order_quantity'
 	                            WHERE UserData\PRODUCT_BY_STORE.prodid = :prodid: AND 
@@ -968,14 +964,14 @@ $app->post(
                         ]
                     );
 
-                    if ($reduce_order->success() === False) {
+                    if ($reduce_order->success() === False){
                         break;
                     }
-                } else {
+                }
+                else{
                     break;
                 }
             }
-
             if ($order->success() === True){
                 $response->setStatusCode(201,"CREATED");
                 $response->setJsonContent(
@@ -1003,13 +999,10 @@ $app->post(
         }
         else{
             $response->setStatusCode(409,"FAILURE");
-
             $errors = [];
-
             foreach ($status->getMessages() as $message) {
                 $errors[] = $message->getMessage();
             }
-
             $response->setJsonContent(
                 [
                     "status" => "SUCCESS",

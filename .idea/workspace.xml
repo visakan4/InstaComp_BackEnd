@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="352a99cc-eff7-4574-955e-7aca9570606b" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/models/ORDERS.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/ORDERS.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,38 +17,8 @@
       <file leaf-file-name="routes.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
-              <caret line="869" lean-forward="true" selection-start-line="869" selection-end-line="869" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CART.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/CART.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="127">
-              <caret line="10" column="18" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ORDERS.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/ORDERS.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="21" column="19" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PRODUCT_BY_ORDER.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/PRODUCT_BY_ORDER.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="901">
-              <caret line="58" column="4" selection-start-line="58" selection-start-column="4" selection-end-line="58" selection-end-column="4" />
-              <folding>
-                <element signature="e#6#89#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="136">
+              <caret line="11" column="40" lean-forward="true" selection-start-line="11" selection-start-column="40" selection-end-line="11" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -73,6 +44,10 @@
       <find>setOrder</find>
       <find>deleteCart</find>
       <find>deleteCar</find>
+      <find>setCart</find>
+      <find>PRODUCT_BY_STORE</find>
+      <find>order_status</find>
+      <find>orderstatus</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -92,9 +67,9 @@
         <option value="$PROJECT_DIR$/models/CART.php" />
         <option value="$PROJECT_DIR$/models/PRODUCT.php" />
         <option value="$PROJECT_DIR$/models/STORE.php" />
-        <option value="$PROJECT_DIR$/models/ORDERS.php" />
         <option value="$PROJECT_DIR$/models/PRODUCT_BY_ORDER.php" />
         <option value="$PROJECT_DIR$/routes.php" />
+        <option value="$PROJECT_DIR$/models/ORDERS.php" />
       </list>
     </option>
   </component>
@@ -199,16 +174,15 @@
       <workItem from="1532573286432" duration="4537000" />
       <workItem from="1533782698018" duration="28000" />
       <workItem from="1533821337305" duration="6266000" />
-      <workItem from="1533855978691" duration="2282000" />
+      <workItem from="1533855978691" duration="10280000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="65506000" />
+    <option name="totallyTimeSpent" value="73504000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28322148" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -264,27 +238,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/models/CATEGORY.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="29" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/USER.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/USERADDR.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -592,13 +545,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/ORDERS.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="21" column="19" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Temp/fz3temp-2/routes.php" />
     <entry file="file://$PROJECT_DIR$/models/CART.php">
       <provider selected="true" editor-type-id="text-editor">
@@ -607,10 +553,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/phalcon-devtools/ide/phpstorm/ide-stubs/src/Phalcon/mvc/model/Manager.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="716" column="6" lean-forward="true" selection-start-line="716" selection-start-column="6" selection-end-line="716" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/phalcon-devtools/ide/phpstorm/ide-stubs/src/Phalcon/mvc/model/ManagerInterface.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="20" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/phalcon-devtools/ide/phpstorm/ide-stubs/src/Phalcon/di/Injectable.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="395">
+          <caret line="37" column="7" lean-forward="true" selection-start-line="37" selection-start-column="7" selection-end-line="37" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/ORDERS.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="384">
+          <caret line="127" lean-forward="true" selection-start-line="127" selection-end-line="127" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="869" lean-forward="true" selection-start-line="869" selection-end-line="869" />
+        <state relative-caret-position="136">
+          <caret line="11" column="40" lean-forward="true" selection-start-line="11" selection-start-column="40" selection-end-line="11" selection-end-column="40" />
         </state>
       </provider>
     </entry>
