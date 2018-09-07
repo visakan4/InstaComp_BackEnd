@@ -5,8 +5,11 @@
 
 ## Technologies
 
+**Languages:** HTML, CSS, PHP, JS
+**Frameworks:** Bootstrap, Phalcon
 
 ## Database schema
+
 
 
 ## Architecture
