@@ -19,4 +19,12 @@ INSTACOMP combines the best of both worlds by providing information about multip
 ![alt text](https://github.com/visakan4/InstaComp_BackEnd/blob/master/images/clickStream.PNG "click stream")
 
 ## Setup
+  
+  * Install PHP
+  * Install Phalcon
+  * Install XAMPP
+  * Clone the repository using the command `git@github.com:visakan4/InstaComp_BackEnd.git`
+  * Place the code in the htdocs folder
+  * Run the webserver and test the RESTful API's
 
+  
