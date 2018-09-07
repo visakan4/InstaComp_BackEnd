@@ -6,7 +6,7 @@ INSTACOMP combines the best of both worlds by providing information about multip
 
 ## Technologies
 
-**Languages:** HTML, CSS, PHP, JavaScript
+**Languages:** HTML, CSS, PHP, JavaScript, MySQL
 
 **Frameworks:** Bootstrap, Phalcon
 
